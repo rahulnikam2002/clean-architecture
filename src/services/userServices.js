@@ -1,19 +1,43 @@
 const userRepository = require("../repositories/userRepository");
 
-const userRegistrationService = async (user) => {
-    const checkExistUser = await userRepository.findOneUserByEmail(user.email);
+const repository = new userRepository();
 
-    if (checkExistUser) {
-        return {
-            msg: "User already exist"
-        };
+class UserSerive {
+    async registration(user) {
+        try {
+            const checkExistUser = await repository.findOneUserByEmail(user.email);
+
+            if (checkExistUser) {
+                return {
+                    msg: "User already exist"
+                };
+            }
+
+            const saveUser = await repository.addUser(user);
+
+            return saveUser;
+        } catch (error) {
+            return error;
+        }
     }
+}
 
-    const saveUser = await userRepository.addUser(user);
+module.exports = UserSerive;
 
-    return saveUser;
-};
+// const userRegistrationService = async (user) => {
+//     const checkExistUser = await repository.findOneUserByEmail(user.email);
 
-module.exports = {
-    userRegistrationService
-};
+//     if (checkExistUser) {
+//         return {
+//             msg: "User already exist"
+//         };
+//     }
+
+//     const saveUser = await repository.addUser(user);
+
+//     return saveUser;
+// };
+
+// module.exports = {
+//     userRegistrationService
+// };
